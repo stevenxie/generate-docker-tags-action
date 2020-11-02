@@ -1,19 +1,27 @@
-import * as core from '@actions/core'
-import {wait} from './wait'
+import { debug, getInput, setOutput, setFailed } from "@actions/core"
+import { getPushTags } from "./push"
+import { getPullRequestTags } from "./pull-request"
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
+    const repo: string = getInput("repo")
+    const tags = getTags()
+    const output = tags.map(tag => `${repo}:${tag}`).concat(",")
+    setOutput("tags", output)
   } catch (error) {
-    core.setFailed(error.message)
+    setFailed(error.message)
   }
 }
 
-run()
+const getTags = (): string[] => {
+  const eventName = process.env.GITHUB_EVENT_NAME
+  debug(`Got event: ${eventName}`)
+  switch (eventName) {
+    case "push":
+      return getPushTags()
+    case "pull_request":
+      return getPullRequestTags()
+    default:
+      throw new Error("Unsupported event name.")
+  }
+}
