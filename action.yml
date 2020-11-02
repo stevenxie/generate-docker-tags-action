@@ -5,6 +5,9 @@ inputs:
   repo:
     required: true
     description: The repository to generate tags for.
+outputs:
+  tags:
+    description: The generated tags.
 runs:
   using: node12
   main: dist/index.js
