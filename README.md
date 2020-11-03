@@ -11,7 +11,7 @@ steps:
   # ...
   - name: Generate tags
     id: generate-tags
-    uses: stevenxie/generate-docker-tags-action@v0.2.0
+    uses: stevenxie/generate-docker-tags-action@v0.2.1
     with:
       repo: my_repo
   - name: Build and push
