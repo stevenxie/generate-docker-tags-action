@@ -64,6 +64,8 @@ exports.getPushTags = void 0;
 const core_1 = __webpack_require__(186);
 exports.getPushTags = () => {
     const ref = process.env.GITHUB_REF;
+    const sha = process.env.GITHUB_SHA;
+    core_1.debug(`Got SHA: ${sha}`);
     core_1.debug(`Got ref: ${ref}`);
     if (ref.includes("refs/tags")) {
         const tag = ref.replace(/^refs\/tags\/(.*)$/, "$1");
@@ -71,7 +73,8 @@ exports.getPushTags = () => {
     }
     else if (ref.includes("refs/heads")) {
         const branch = process.env.GITHUB_REF.replace(/^refs\/heads\/(.*)$/, "$1");
-        return [branch];
+        const prefix = branch.replace("/", "-");
+        return [`${prefix}-${sha.substr(0, 7)}`];
     }
     throw new Error("Unable to determine tags from ref.");
 };
