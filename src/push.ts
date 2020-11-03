@@ -1,4 +1,5 @@
 import { debug } from "@actions/core"
+import { valid as semver } from "semver"
 
 export const getPushTags = (): string[] => {
   const ref = process.env.GITHUB_REF!
@@ -7,8 +8,9 @@ export const getPushTags = (): string[] => {
   debug(`Got ref: ${ref}`)
 
   if (ref.includes("refs/tags")) {
-    const tag = ref.replace(/^refs\/tags\/(.*)$/, "$1")
-    return [tag.startsWith("v") ? tag.substr(1) : tag, "latest"]
+    const raw = ref.replace(/^refs\/tags\/(.*)$/, "$1")
+    const tag = semver(raw) ?? raw
+    return [tag, "latest"]
   } else if (ref.includes("refs/heads")) {
     const branch = process.env.GITHUB_REF!.replace(/^refs\/heads\/(.*)$/, "$1")
     const prefix = branch.replace("/", "-")
