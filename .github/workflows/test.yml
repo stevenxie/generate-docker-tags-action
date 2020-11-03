@@ -13,6 +13,6 @@ jobs:
         id: generate-tags
         uses: ./
         with:
-          repo: fake
+          repo: phony
       - name: Print tags
         run: echo "${{ steps.generate-tags.outputs.tags }}"
