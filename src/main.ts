@@ -1,4 +1,4 @@
-import { debug, getInput, setOutput, setFailed } from "@actions/core"
+import { debug, info, getInput, setOutput, setFailed } from "@actions/core"
 import { getPushTags } from "./push"
 import { getPullRequestTags } from "./pull-request"
 
@@ -20,6 +20,8 @@ function run(): void {
     const repo: string = getInput("repo")
     const tags = getTags()
     const output = tags.map(tag => `${repo}:${tag}`).join(",")
+    info("Generated tags:")
+    info(tags.map(tag => `  - ${tag}`).join("\n"))
     setOutput("tags", output)
   } catch (error) {
     setFailed(error.message)

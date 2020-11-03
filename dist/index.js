@@ -28,6 +28,8 @@ function run() {
         const repo = core_1.getInput("repo");
         const tags = getTags();
         const output = tags.map(tag => `${repo}:${tag}`).join(",");
+        core_1.info("Generated tags:");
+        core_1.info(tags.map(tag => `  - ${tag}`).join("\n"));
         core_1.setOutput("tags", output);
     }
     catch (error) {
